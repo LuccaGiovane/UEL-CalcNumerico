@@ -124,3 +124,16 @@ A função retorna uma tabela com duas colunas:<br>
     - x: O valor da aproximação na iteração correspondente.
     - f(x): O valor do polinômio avaliado em x.
     - f'(x): O valor da derivada do polinômio avaliada em x.
+
+### [AITKEN](https://github.com/LuccaGiovane/UEL-CalcNumerico/blob/main/Prova%202/aitken.gs)
+=aitkenPolynomialTableInSheets(INTERVALO:x; INTERVALO:Y)
+- **Parâmetros**
+  - Coluna 1 (x): valores de x.
+  - Coluna 2 (y): Valores correspondentes de f(x).
+- **Saída**
+  - A função retorna uma matriz contendo:
+
+    - Os polinômios intermediários p0j, p01j, p012j etc:
+    - O polinomial final da interpolação na ultima coluna da tabela.
+
+
