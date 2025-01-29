@@ -134,6 +134,6 @@ A função retorna uma tabela com duas colunas:<br>
   - A função retorna uma matriz contendo:
 
     - Os polinômios intermediários p0j, p01j, p012j etc:
-    - O polinomial final da interpolação na ultima coluna da tabela.
+    - O polinômio final da interpolação na ultima coluna da tabela.
 
 
