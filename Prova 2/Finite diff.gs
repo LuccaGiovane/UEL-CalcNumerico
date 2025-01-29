@@ -7,8 +7,10 @@
  *    - A tabela de diferenças (em formato triangular),
  *    - Uma linha final com o polinômio expandido.
  *
- * Ex. de uso (PT-BR):  =FORWARD_DIFFERENCES(A1:B4)
- * Se estiver em planilha EN-US use vírgula: =FORWARD_DIFFERENCES(A1:B4)
+ * Ex. de uso (PT-BR):  =FORWARD_DIFFERENCES(A1:B10)
+ *    (Usando pontos em A1:B10, por exemplo)
+ *
+ * Se estiver em planilha EN-US use vírgula: =FORWARD_DIFFERENCES(A1:B10)
  */
 function FORWARD_DIFFERENCES(rng) {
   //-----------------------------------------------------------
@@ -61,7 +63,7 @@ function FORWARD_DIFFERENCES(rng) {
   }
 
   //-----------------------------------------------------------
-  // 3) Preparar a "tabela triangular" no estilo da figura
+  // 3) Preparar a "tabela triangular"
   //-----------------------------------------------------------
   // Colunas: [ x, f(x), Δ^1 y, Δ^2 y, ... Δ^(n-1) y ]
   // Cada linha i mostra: x_i, f(x_i), diffs[1][i], diffs[2][i], ...
@@ -87,15 +89,14 @@ function FORWARD_DIFFERENCES(rng) {
   // 4) Construir o polinômio de Newton (Forward) e expandi-lo
   //-----------------------------------------------------------
   // P(x) = diffs[0][0]
-  //      + diffs[1][0]*( (x - x_0)/1!h )
-  //      + diffs[2][0]*( (x - x_0)((x - x_0)-h) ) / (2! h^2)
+  //      + diffs[1][0]*( (x - x_0)/(1!*h) )
+  //      + diffs[2][0]*( (x - x_0)((x - x_0)-h) ) / (2!*h^2)
   //      + ...
   //
-  // Faremos a expansão em forma de polinômio: a_0 + a_1 x + a_2 x^2 + ...
+  // Expansão final em forma de polinômio: a_0 + a_1 x + a_2 x^2 + ...
   // usando operações de polinômios em arrays de coeficientes.
 
   // Funções auxiliares para polinômios em ordem decrescente:
-  //   ex.: [2, -1, 3] => 2x^2 - 1x + 3
   function polyZero(g) {
     return Array(g + 1).fill(0);
   }
@@ -115,25 +116,6 @@ function FORWARD_DIFFERENCES(rng) {
     }
     return R.map(x => parseFloat(x.toFixed(6)));
   }
-
-  // Montar cada termo k:
-  //   (x - x_0)(x - (x_0+h))...(x - (x_0+(k-1)*h))
-  //   -------------------------------------------
-  //         k! * (h^k)
-  //
-  // Em array de coef. decrescente.
-  // E então multiplicar pelo diffs[k][0].
-  const grauFinal = n - 1;
-  let poly = polyZero(grauFinal); // soma final
-
-  // polinômio "1" (grau 0)
-  function poly1() { return [1]; }
-
-  // constrói (x - (x0 + j*h)) em ordem decrescente: [1, -(x0+j*h)]
-  function buildLinearFactor(x0, j, h) {
-    return [1, - (x0 + j * h)];
-  }
-
   // fatorial
   function factorial(m) {
     let r = 1;
@@ -141,10 +123,21 @@ function FORWARD_DIFFERENCES(rng) {
     return r;
   }
 
+  // polinômio "1" (grau 0)
+  function poly1() {
+    return [1];
+  }
+
+  // constrói (x - (x0 + j*h)) em ordem decrescente: [1, -(x0+j*h)]
+  function buildLinearFactor(x0, j, h) {
+    return [1, -(x0 + j * h)];
+  }
+
+  const grauFinal = n - 1;
+  let poly = polyZero(grauFinal); // soma final
   const x0 = xs[0]; // primeiro ponto
+
   for (let k = 0; k < n; k++) {
-    // diffs[k][0] não existe para k>=n => safe pois k<n
-    // mas note que k=0 => Δ^0 y_0 = f(x0). Esse termo é só a constante f(x0).
     const delta = diffs[k][0]; 
     // Constrói polinômio do numerador (x - x0)(x - (x0+h))...(k fatores)
     let numeratorPoly = poly1();
@@ -157,13 +150,10 @@ function FORWARD_DIFFERENCES(rng) {
     const scale = delta / denom;
     const termPoly = polyScale(numeratorPoly, scale);
 
-    // somar ao polinômio final
-    // Mas precisamos que poly e termPoly tenham mesmo grau (grauFinal).
-    // Se 'termPoly' tem grau k, length k+1, precisamos redimensionar p/ grauFinal+1
+    // Ajustar tamanho do polinômio (para somar corretamente)
     function polyResize(p, newLen) {
       const diff = newLen - p.length;
       if (diff > 0) {
-        // insere zeros no início (ordem decrescente)
         return Array(diff).fill(0).concat(p);
       }
       return p;
@@ -171,9 +161,6 @@ function FORWARD_DIFFERENCES(rng) {
     const bigTerm = polyResize(termPoly, grauFinal + 1);
     poly = polyAdd(poly, bigTerm);
   }
-
-  // poly agora é o polinômio expandido em ordem decrescente: 
-  //    poly[0]*x^grauFinal + poly[1]*x^(grauFinal-1) + ...
 
   //-----------------------------------------------------------
   // 5) Converter esse polinômio em string (ex.: "1.000x^3 + ...")
@@ -190,7 +177,7 @@ function FORWARD_DIFFERENCES(rng) {
       if (coef >= 0 && s.length > 0) {
         coefStr = "+" + coefStr;
       }
-      // Anexa x^e (se e>0), ou só o coef (se e=0)
+      // Anexa x^e (se e>1), ou só x (se e=1), ou só o coef (se e=0)
       if (e > 1) {
         s += coefStr + "x^" + e + " ";
       } else if (e === 1) {
