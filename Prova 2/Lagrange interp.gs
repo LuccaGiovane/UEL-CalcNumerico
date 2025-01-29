@@ -1,9 +1,10 @@
 /**
  * Interpolação de Lagrange, mostrando na tabela:
- *  - As linhas Lk com:
- *    1) Col. "Mult" = ( y_k / PROD_{j!=k}(x_k - x_j) ) [decimal].
- *    2) Col. x^... = polinômio inteiro (x - x_j)(x - x_j)... (sem dividir).
- *  - Linha final "P(x)" = soma efetiva dos parciais em decimal.
+ *  - Para cada k:
+ *    - Linha "Lk": rótulo e o fator multiplicador [y_k/Denominador_k].
+ *    - Linha "N": polinômio "Numerador_k" (coeficientes inteiros, sem divisão).
+ *    - Linha "D": valor do Denominador_k.
+ *  - Linha final "P(x)": soma efetiva em decimal dos termos parciais.
  *
  * @param {A2:B?} pontos    Intervalo com duas colunas: (X, Y).
  * @param {number} iter     (opcional, sem uso real aqui, só para manter padrão).
@@ -55,8 +56,8 @@ function LAGRANGE_INTERP(pontos, iter) {
     return R;
   }
 
-  // Multiplica dois polinômios P, Q (tamanhos p, q).
-  // Grau final = (p-1)+(q-1)=p+q-2 => array de tamanho (p+q-1).
+  // Multiplica dois polinômios P, Q
+  // Grau final = (p-1)+(q-1) = p+q-2 => array de tamanho (p+q-1).
   function polyMul(P, Q) {
     const R = Array(P.length + Q.length - 1).fill(0);
     for (let i = 0; i < P.length; i++) {
@@ -86,24 +87,20 @@ function LAGRANGE_INTERP(pontos, iter) {
   }
 
   //------------------------------------------------------------------
-  // 3) Construir cada L_k: primeiramente só o "numerador" (x-x_j)...
+  // 3) Calcular e montar a tabela
   //------------------------------------------------------------------
-  // L_k(x) = Numerador / Denominador
-  // Numerador_k = PROD_{j!=k} [x - x_j]
-  // Denominador_k = PROD_{j!=k} [x_k - x_j]
-  // Depois multiplica por y_k.
-  // Mas aqui, na tabela, mostraremos:
-  //   * "Mult" = ( y_k / Denominador_k )
-  //   * colunas x^... = "Numerador_k" (ainda inteiro, sem dividir)
-  // E no final, somamos de fato "Mult" * Numerador_k em decimal, gerando P(x).
+  // L_k(x) = (y_k / Denominador_k) * [ PROD_{j!=k}(x - x_j) ]
+  // Mas iremos exibir também o Numerador_k (sem dividir) e o Denominador_k,
+  // para ficar claro como cada termo é construído.
   //------------------------------------------------------------------
 
-  let P_final = polyZero(grau); // soma final dos parciais (em decimal)
+  // Polinômio final (soma dos termos)
+  let P_final = polyZero(grau);
 
-  // Cabeçalho: [" ", "Mult", "x^3", "x^2", "x", "ind"], se grau=3
+  // Cabeçalho: [" ", "Mult", "x^grau", ..., "x^0"]
   const header = [" ", "Mult"];
   for (let e = grau; e >= 0; e--) {
-    if (e === 0) header.push("ind");
+    if (e === 0) header.push("ind");  // ou "x^0"
     else header.push(`x^${e}`);
   }
   const tabela = [header];
@@ -116,7 +113,7 @@ function LAGRANGE_INTERP(pontos, iter) {
     for (let j = 0; j < n; j++) {
       if (j === k) continue;
       // fator (x - x_j)
-      const fator = [1, -xs[j]]; // => x^1 + (-x_j)*x^0
+      const fator = [1, -xs[j]]; // => x + (-x_j)
       numerador = polyMul(numerador, fator); // expande
     }
 
@@ -127,28 +124,49 @@ function LAGRANGE_INTERP(pontos, iter) {
       denom *= (xs[k] - xs[j]);
     }
 
-    // 3.3) "Mult" = y_k / denom (decimal)
+    // 3.3) "Mult" = y_k / denom (decimal, arredondado para 6 casas)
     const mult = parseFloat((ys[k] / denom).toFixed(6));
+    denom = parseFloat(denom.toFixed(6)); // idem para exibir na tabela
 
-    // 3.4) Monta a linha de tabela: 
-    //      "Lk", <mult>, <numerador x^grau ... x^0> (inteiro, sem divisão)
-    const row = [];
-    row.push(`L${k}`);  // rótulo
-    row.push(mult);     // "Mult" => y_k/denom
-    // Ajustar numerador para ter grau=grau => length=grau+1
+    // Ajusta tamanho do numerador p/ grau = "n - 1"
     const numerResized = polyResize(numerador, grau + 1);
-    // Adiciona colunas x^grau..ind
-    for (let c = 0; c < numerResized.length; c++) {
-      row.push(numerResized[c]);
-    }
-    tabela.push(row);
 
-    // 3.5) Para formar P(x), somamos "Mult * numerador"
+    // 3.4) Adiciona 3 linhas à tabela:
+    //      [Lk, mult, "", "", ...]
+    //      [N,  "",   numerResized...]
+    //      [D,  denom, "", "", ...]
+    {
+      // Linha Lk
+      const rowL = [`L${k}`, mult];
+      // completa com "" até o número de colunas
+      for (let c = 0; c < (grau + 1); c++) {
+        rowL.push("");
+      }
+      tabela.push(rowL);
+
+      // Linha N
+      const rowN = ["N", ""];
+      for (let c = 0; c < numerResized.length; c++) {
+        rowN.push(numerResized[c]);
+      }
+      tabela.push(rowN);
+
+      // Linha D
+      const rowD = ["D", denom];
+      for (let c = 0; c < grau + 1; c++) {
+        rowD.push("");
+      }
+      tabela.push(rowD);
+    }
+
+    // 3.5) Para formar P(x), somamos "mult * numerador"
     const parcial = polyScale(numerResized, mult);
     P_final = polyAdd(P_final, parcial);
   }
 
+  //------------------------------------------------------------------
   // 4) Linha final: "P(x)" e seus coeficientes
+  //------------------------------------------------------------------
   const sumRow = ["P(x)", ""];
   for (let i = 0; i < P_final.length; i++) {
     sumRow.push(P_final[i]);
@@ -156,7 +174,7 @@ function LAGRANGE_INTERP(pontos, iter) {
   tabela.push(sumRow);
 
   //------------------------------------------------------------------
-  // Retorna tabela
+  // 5) Retorna a tabela (linhas x colunas)
   //------------------------------------------------------------------
   return tabela;
 }
