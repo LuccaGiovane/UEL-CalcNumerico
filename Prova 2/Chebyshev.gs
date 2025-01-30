@@ -68,22 +68,16 @@ function CHEBYSHEV(polinomio, x0, iteracoes) {
     const f1x = f1(xAtual);
     const f2x = f2(xAtual);
 
-    // Armazenar linha
-    table.push([
-      i,
-      parseFloat(xAtual.toFixed(6)),
-      parseFloat(fx.toFixed(6)),
-      parseFloat(f1x.toFixed(6)),
-      parseFloat(f2x.toFixed(6))
-    ]);
+    table.push([i, xAtual.toFixed(6), fx.toFixed(6), f1x.toFixed(6), f2x.toFixed(6)]);
 
     if (i < iteracoes) {
-      // Evita zero em denominador
-      const denom = 2 * (f1x ** 2) - fx * f2x;
-      if (Math.abs(denom) < 1e-15) {
-        throw new Error("Denominador ~ 0; não é possível prosseguir.");
+      // Evitar divisão por zero ou derivada nula
+      if (Math.abs(f1x) < 1e-15) {
+        throw new Error("f'(x) ~ 0; não é possível prosseguir.");
       }
-      const passo = (2 * fx * f1x) / denom;
+      const termo1 = fx / f1x;
+      const termo2 = 0.5 * (termo1 ** 2) * (f2x / f1x);
+      const passo = termo1 + termo2;
       xAtual = parseFloat((xAtual - passo).toFixed(6));
     }
   }
