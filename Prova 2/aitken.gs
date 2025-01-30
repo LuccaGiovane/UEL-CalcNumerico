@@ -40,7 +40,7 @@ function polyXMinus(alpha) {
 /************************************************************
  * 2) Função principal: Construção da tabela com polinômios intermediários
  ************************************************************/
-function aitkenPolynomialTable(xVals, yVals) {
+function AITKEN(xVals, yVals) {
   var n = xVals.length;
   if (n !== yVals.length) {
     throw new Error("xVals e yVals devem ter o mesmo tamanho!");
