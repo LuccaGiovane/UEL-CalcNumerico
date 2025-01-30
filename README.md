@@ -126,7 +126,7 @@ A função retorna uma tabela com duas colunas:<br>
     - f'(x): O valor da derivada do polinômio avaliada em x.
 
 ### [AITKEN](https://github.com/LuccaGiovane/UEL-CalcNumerico/blob/main/Prova%202/aitken.gs)
-=aitkenPolynomialTableInSheets(INTERVALO:x; INTERVALO:Y)
+=AITKEN(INTERVALO:x; INTERVALO:Y)
 - **Parâmetros**
   - Coluna 1 (x): valores de x.
   - Coluna 2 (y): Valores correspondentes de f(x).
