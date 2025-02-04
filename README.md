@@ -11,6 +11,19 @@
 4. **Caso queira por mais arquivos basta criar mais clicando em:** *+ > Script*
 <img src="https://github.com/LuccaGiovane/UEL-CalcNumerico/blob/main/img-tutorial/passo%204.png" alt="Passo 4" width="800">
 
+## Prova 1
+### [Fatoração LU](https://github.com/LuccaGiovane/UEL-CalcNumerico/blob/main/Prova%201/LU.gs)
+=LU(intervalo NxN)
+
+- **Parâmetros**<br>
+  - matriz: Intervalo ou array representando uma matriz quadrada (NxN) com valores numéricos.
+
+- **Saída**<br> 
+  - A Matriz L (à esquerda) com os multiplicadores da Eliminação de Gauss na parte inferior e 1's na diagonal principal.
+  - A Matriz U (à direita) com os coeficientes resultantes da eliminação na parte superior.
+  - Todos os valores são arredondados para 6 casas decimais.
+
+
 ## Prova 2
 
 ### [CAUCHY_COTA](https://github.com/LuccaGiovane/UEL-CalcNumerico/blob/main/Prova%202/Cauchy.gs)
