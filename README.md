@@ -198,4 +198,23 @@ A função retorna uma tabela com duas colunas:<br>
 
 - **Saída**
   - A função retorna:
-    - O valor da Simpson 3/8
+    - O valor da Simpson 3/8  
+
+### [ERRO ABSOLUTO](https://github.com/LuccaGiovane/UEL-CalcNumerico/blob/main/Prova%203/AbsError.gs)
+=ERRO_ABSOLUTO(V1;V2)
+- **Parâmetros**
+  -V1: valor da solução EXATA!!! (sempre escrito a esquerda ou acima nas celulas)
+  -V2: valor da solução APROXIMADA!!! (sempre escrito a direita ou abaixo nas celulas)
+    - **A ordem de v1 v2 importa !!**, caso nao tenha entendido ex:
+    - Valor exato: 3.5 ; Valor aproximado: 2,452371 ; na criação das celulas, o exato sempre acima ou a esquerda do aproximado: 
+    Ex1 caso insira em uma linha: | 3.5 | 2,452371 | (V1 a "esquerda")
+    Ex2 caso insira em uma coluna:
+    | 3.5 |
+    | :---- |
+    | 2,452371 |
+    - Valor exato nesse caso sempre acima!!
+
+- **Saída**
+  - A função retorna:
+    - o valor do erro absoluto calculado pela formula:
+    - Ea = abs[ (Ve - Va)/Ve]
