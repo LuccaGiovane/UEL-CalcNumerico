@@ -26,14 +26,14 @@ function polynomialValue(coeffs, x) {
 }
 
 /*************************************************************
- * RiemannSumTable
+ * RIEMANN_SUM
  *  - Lê os coeficientes (ordem decrescente) em coeffRange
  *  - Calcula a Soma de Riemann no intervalo [a,b] usando n
  *    subintervalos (ponto médio).
  *  - Retorna uma "tabela" (array 2D) contendo:
  *    1) "Soma de Riemann" e o valor
  *    2) "Valor da norma" e o valor (||P||)
- *    3) Uma mini-tabela com "Delta" e "Resultado" para cada
+ *    3) Uma mini-tabela com "Delta i" e "Resultado" para cada
  *       subintervalo i (i=1..n).
  *************************************************************/
 function RIEMANN_SUM(coeffRange, a, b, n) {
@@ -44,8 +44,8 @@ function RIEMANN_SUM(coeffRange, a, b, n) {
 
   // 2) Lê coeficientes do polinômio (ordem decrescente)
   var coeffs = [];
-  // Se for 1D
   if (!Array.isArray(coeffRange[0])) {
+    // Se for 1D
     for (var i = 0; i < coeffRange.length; i++) {
       coeffs.push(round6(coeffRange[i]));
     }
@@ -63,7 +63,7 @@ function RIEMANN_SUM(coeffRange, a, b, n) {
 
   // 4) Soma de Riemann (ponto médio)
   var sum = 0.0;
-  var areas = []; // para armazenar f(εi)*deltaX de cada subintervalo
+  var areas = []; // armazena f(εi)*deltaX de cada subintervalo
 
   for (var k = 0; k < n; k++) {
     // x_inicial do subintervalo k
@@ -79,28 +79,28 @@ function RIEMANN_SUM(coeffRange, a, b, n) {
   }
 
   // 5) Montar a tabela (matriz 2D) de saída
-  // Primeiro bloco: Soma de Riemann + Valor
-  // Segundo bloco: Valor da Norma + Valor
-  // Terceiro bloco: Cabeçalho "Delta" | "Resultado"
-  // Quarto bloco: Linhas [ deltaX, area ] para cada subintervalo
+  // Primeiro bloco: "Soma de Riemann" + valor
+  // Segundo bloco: "Valor da norma" + valor
+  // Terceiro bloco: cabeçalho ["Delta", "Resultado"]
+  // Quarto bloco: para cada subintervalo, ["Delta i", area]
+
   var resultTable = [];
 
   // (i) Soma de Riemann
   resultTable.push(["Soma de Riemann"]);
   resultTable.push([sum.toFixed(6)]);
 
-  // (ii) Valor da norma
+  // (ii) Valor da norma (deltaX em partição uniforme)
   resultTable.push(["Valor da norma"]);
-  // Para partição uniforme, norma = deltaX
   resultTable.push([deltaX.toFixed(6)]);
 
   // (iii) Cabeçalho da mini-tabela
   resultTable.push(["Delta", "Resultado"]);
 
-  // (iv) Para cada subintervalo, uma linha
+  // (iv) Para cada subintervalo, mostramos "Delta 1", "Delta 2", etc.
   for (var m = 0; m < n; m++) {
     resultTable.push([
-      deltaX.toFixed(6),
+      "Delta " + (m+1),
       areas[m].toFixed(6)
     ]);
   }
