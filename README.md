@@ -150,3 +150,52 @@ A função retorna uma tabela com duas colunas:<br>
     - O polinômio final da interpolação na ultima coluna da tabela.
 
 
+## Prova 3
+
+### [RIEMANN](https://github.com/LuccaGiovane/UEL-CalcNumerico/blob/main/Prova%203/Riemann.gs)
+=RIEMANN_SUM(INDICES; LIM INFERIOR; LIM SUPERIOR; NUM PARTIÇOES)
+- **Parâmetros**
+  - INTERVALO: indices do polinomio ex: x^3 - x + 3 => 1 0 -1 3 (um numero por célula).
+  - LIM INFERIOR: limite inferior da integral.
+  - LIM SUPERIOR: limite superior da integral.
+  - NUM PARTIÇÕES: número de partições desejadas.
+
+- **Saída**
+  - A função retorna:
+    - Soma de Riemann.
+    - Valor da norma.
+    - Largura de cada subintervalo.
+
+### [NORMA](https://github.com/LuccaGiovane/UEL-CalcNumerico/blob/main/Prova%203/PartitionNorm.gs)
+=PARTITION_NORM(PONTOS)
+- **Parâmetros**
+  - PONTOS: conjunto de N pontos para calcular
+
+- **Saída**
+  - A função retorna:
+    - a norma da partição
+    - o valor de delta para cada um dos pontos fornecidos
+
+### [SIMPSON 1/3](https://github.com/LuccaGiovane/UEL-CalcNumerico/blob/main/Prova%203/Simpson%201-3.gs)
+=SIMPSON_13(POLINOMIO; LIM INF; LIM SUP; INTERVALO)
+- **Parâmetros**
+  - POLINOMIO: polinomio dentro da integral que o professor der ex: "e^(2*x) * cos(x^2) / (sen(x) + 1)"
+  - LIM INF: limite inferior da integral
+  - LIM SUP: limite superior da integral
+  - INTERVALO: numero de subintervalos (deve ser par)
+
+- **Saída**
+  - A função retorna:
+    - O valor da Simpson 1/3
+
+### [SIMPSON 3/8](https://github.com/LuccaGiovane/UEL-CalcNumerico/blob/main/Prova%203/Simpson%203-8.gs)
+=SIMPSON_38(POLINOMIO; LIM INF; LIM SUP; INTERVALO)
+- **Parâmetros**
+  - POLINOMIO: polinomio dentro da integral que o professor der ex: "e^(2*x) * cos(x^2) / (sen(x) + 1)"
+  - LIM INF: limite inferior da integral
+  - LIM SUP: limite superior da integral
+  - INTERVALO: numero de subintervalos (deve ser multiplo de 3)
+
+- **Saída**
+  - A função retorna:
+    - O valor da Simpson 3/8

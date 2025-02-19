@@ -68,7 +68,7 @@ function evaluateAt(exprString, xVal) {
  * Exemplo de uso:
  *   =SIMPSONS_13("sen(x^2) + e^(x)", 0, 1, 6)
  *************************************************************/
-function SIMPSONS_13(expr, a, b, n) {
+function SIMPSON_13(expr, a, b, n) {
   // Converter os parâmetros
   a = round6(a);
   b = round6(b);
