@@ -206,12 +206,19 @@ A função retorna uma tabela com duas colunas:<br>
   -V1: valor da solução EXATA!!! (sempre escrito a esquerda ou acima nas celulas)
   -V2: valor da solução APROXIMADA!!! (sempre escrito a direita ou abaixo nas celulas)
     - **A ordem de v1 v2 importa !!**, caso nao tenha entendido ex:
-    - Valor exato: 3.5 ; Valor aproximado: 2,452371 ; na criação das celulas, o exato sempre acima ou a esquerda do aproximado: 
-    Ex1 caso insira em uma linha: | 3.5 | 2,452371 | (V1 a "esquerda")
-    Ex2 caso insira em uma coluna:
+    - Valor exato: 3.5 ; Valor aproximado: 2,452371 ; na criação das celulas, o exato sempre acima ou a esquerda do aproximado: <br>
+    - Ex1 caso insira em uma linha: <br>
+
+  | 3.5    | 2.452371                           |
+  | :--------------  | :--------------------------------- |
+
+    - (V1 a "esquerda")<br>
+    - Ex2 caso insira em uma coluna:<br>
+    
     | 3.5 |
     | :---- |
-    | 2,452371 |
+    | 2.452371 |  <br>
+    
     - Valor exato nesse caso sempre acima!!
 
 - **Saída**
